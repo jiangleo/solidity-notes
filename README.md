@@ -155,7 +155,7 @@ Solidity 提供几种基础数据类型(elementary types)。复合数据类型(c
 
 ### 值类型
 
-值类型(Value Types)：这些类型的变量将始终按值传递，也就是说它们在用作函数参数或赋值时总是被复制。
+值类型(Value Types)：由类型的值表示数据类型。值类型的始终按值传递(pass by value)，也就是说它们在用作函数参数或赋值时总是被复制。
 
 #### 布尔
 
@@ -186,33 +186,37 @@ address x = 0xdCad3a6d3569DF655070DEd06cb7A1b2Ccd1D3AF
 
 ### 引用类型 
 
-在以太坊上复制的复杂数据类型需要的成本比基础数据类型的成本要高，操作复杂数据类型更要小心。因为复制数据类型的存储空间通常比值类型的要多，操作时需注意尽可能地传递引用，而不是复制整个值。
+引用类型(Reference Types)：由类型的引用表示的数据类型，比如数组、结构体。在 Solidity 中，引用类型在用作函数参数或赋值时，可能是传递引用，也有可能会发生复制。这点其他语言(JavaScript)会有些不一样。
+
+#### 数据位置
+
+复杂数据类型的值是通常是其他现有数据类型的组合，因此复杂数据类型往往比基础数据类型占用的内存或存储空间要大，操作时消耗的算力也要跟大，耗费的 Gas 也越多。在 JavaScript 中，赋值基础数据类型，一定是赋值一个副本(pass by value) ————— 一个复制的复杂数据类型，赋值赋值复杂数据类型时，赋值的一定是它的引用(pass by reference)。在 Solidity 中，赋值基础数据类型时是赋值一个副本，但是在赋值复杂数据类型时，有可能是赋值它的引用，也有可能是赋值它的副本。这时由于声明 Solidity 数据类型时，除了复杂数据类型和基础数据类型的维度外，还有数据存储位置(Data location) `memory` 、 `storage` 和 `calldata` 的维度。 复杂数据类型在 `memory` 和 `storage` 之间赋值时，如 `memory` => `storage`，会赋值一个复制的副本；在 `memory` 和 `memory` 之间赋值，或者在 `storage` 和 `storage` 之间赋值，只会赋值引用。尽可能地赋值引用，避免赋值副本，可以减少 Gas 的消耗。
+
+**强制存储位置：** 不可改变存储职位
+- 外部函数(external functions)的参数(不包含返回值)：`calldata`
+- 状态变量(state variables)：`storage`
+
+**默认存储职位：** 可通过 `storage` 和  `memory` 声明改变存储位置
+- 函数参数(包括返回值，除了 `calldata`): `memory`
+- 所有其他本地变量：`storage`
+
+#### 数组
 
 
-```
-contract C {
-    uint[] x; // the data location of x is storage
+#### 结构体
 
-    // the data location of memoryArray is memory
-    function f(uint[] memoryArray) public {
-        x = memoryArray; // works, copies the whole array to storage
-        var y = x; // works, assigns a pointer, data location of y is storage
-        y[7]; // fine, returns the 8th element
-        y.length = 2; // fine, modifies x through y
-        delete x; // fine, clears the array, also modifies y
-        // The following does not work; it would need to create a new temporary /
-        // unnamed array in storage, but storage is "statically" allocated:
-        // y = memoryArray;
-        // This does not work either, since it would "reset" the pointer, but there
-        // is no sensible location it could point to.
-        // delete y;
-        g(x); // calls g, handing over a reference to x
-        h(x); // calls h and creates an independent, temporary copy in memory
-    }
 
-    function g(uint[] storage storageArray) internal {}
-    function h(uint[] memoryArray) public {}
-}
-```
+#### 映射 
+
+
+
+
+
+
+
+
+
+
+
 
 
