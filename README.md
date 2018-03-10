@@ -234,7 +234,7 @@ uint[] memory x = [uint(1), 3, 4];
 
 数组成员
 - length: 数组元素的数量。
-- push: 动态长度的 `storage` 数组(包括 bytes，不包括 string)拥有 push 方法，可以在数组的末尾增加一个元素。
+- push: 动态长度的 `storage` 数组和 `bytes`(不包括 string)拥有 push 方法，可以在数组的末尾增加一个元素。
 
 
 
