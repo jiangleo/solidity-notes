@@ -192,11 +192,11 @@ address x = 0xdCad3a6d3569DF655070DEd06cb7A1b2Ccd1D3AF
 
 复杂数据类型的值是通常是其他现有数据类型的组合，因此复杂数据类型往往比基础数据类型占用的内存或存储空间要大，操作时消耗的算力也要跟大，耗费的 Gas 也越多。在 JavaScript 中，赋值基础数据类型，一定是赋值一个副本(pass by value) ————— 一个复制的复杂数据类型，赋值赋值复杂数据类型时，赋值的一定是它的引用(pass by reference)。在 Solidity 中，赋值基础数据类型时是赋值一个副本，但是在赋值复杂数据类型时，有可能是赋值它的引用，也有可能是赋值它的副本。这时由于声明 Solidity 数据类型时，除了复杂数据类型和基础数据类型的维度外，还有数据存储位置(Data location) `memory` 、 `storage` 和 `calldata` 的维度。 复杂数据类型在 `memory` 和 `storage` 之间赋值时，如 `memory` => `storage`，会赋值一个复制的副本；在 `memory` 和 `memory` 之间赋值，或者在 `storage` 和 `storage` 之间赋值，只会赋值引用。尽可能地赋值引用，避免赋值副本，可以减少 Gas 的消耗。
 
-**强制存储位置：** 不可改变存储职位
+**强制存储位置：** 不可改变存储位置
 - 外部函数(external functions)的参数(不包含返回值)：`calldata`
 - 状态变量(state variables)：`storage`
 
-**默认存储职位：** 可通过 `storage` 和  `memory` 声明改变存储位置
+**默认存储位置：** 可通过 `storage` 和  `memory` 声明改变存储位置
 - 函数参数(包括返回值，除了 `calldata`): `memory`
 - 所有其他本地变量：`storage`
 
