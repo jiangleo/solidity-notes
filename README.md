@@ -186,27 +186,62 @@ address x = 0xdCad3a6d3569DF655070DEd06cb7A1b2Ccd1D3AF
 
 ### 引用类型 
 
-引用类型(Reference Types)：由类型的引用表示的数据类型，比如数组、结构体。在 Solidity 中，引用类型在用作函数参数或赋值时，可能是传递引用，也有可能会发生复制。这点其他语言(JavaScript)会有些不一样。
+引用类型(Reference Types)：由类型的引用表示的数据类型，比如数组、结构体。在 Solidity 中，引用类型在用作函数参数或赋值时，可能是传递引用，也有可能会发生复制，这点其他语言(JavaScript)会有些不一样。是传递引用，还是发生复制，取决于数据位置。
 
 #### 数据位置
 
-复杂数据类型的值是通常是其他现有数据类型的组合，因此复杂数据类型往往比基础数据类型占用的内存或存储空间要大，操作时消耗的算力也要跟大，耗费的 Gas 也越多。在 JavaScript 中，赋值基础数据类型，一定是赋值一个副本(pass by value) ————— 一个复制的复杂数据类型，赋值赋值复杂数据类型时，赋值的一定是它的引用(pass by reference)。在 Solidity 中，赋值基础数据类型时是赋值一个副本，但是在赋值复杂数据类型时，有可能是赋值它的引用，也有可能是赋值它的副本。这时由于声明 Solidity 数据类型时，除了复杂数据类型和基础数据类型的维度外，还有数据存储位置(Data location) `memory` 、 `storage` 和 `calldata` 的维度。 复杂数据类型在 `memory` 和 `storage` 之间赋值时，如 `memory` => `storage`，赋值是副本；在 `memory` 和 `memory` 之间赋值，或者在 `storage` 和 `storage` 之间赋值，赋值的是引用。尽可能地赋值引用，避免赋值副本，可以减少 Gas 的消耗。
+数据存储位置(Data location)：包括 `memory` 、 `storage` 和 `calldata`。复杂数据类型在 `memory` 和 `storage` 之间赋值时，如 `memory` => `storage`，赋值是副本——发生复制；在 `memory` 和 `memory` 之间赋值，或者在 `storage` 和 `storage` 之间赋值，赋值的是引用。尽可能地赋值引用，避免发生复制，可以减少 Gas 的消耗。
 
-**强制存储位置：** 不可改变存储位置
+强制存储位置：不可改变存储位置
 - 外部函数(external functions)的参数(不包含返回值)：`calldata`
 - 状态变量(state variables)：`storage`
 
-**默认存储位置：** 可通过 `storage` 和  `memory` 声明改变存储位置
+默认存储位置：可通过 `storage` 和  `memory` 声明改变存储位置
 - 函数参数(包括返回值，除了 `calldata`): `memory`
 - 所有其他本地变量：`storage`
 
 #### 数组
 
+数组(Arrays)：相同类型的元素的集合所组成的数据结构。数组可以是固定的长度或者动态的长度，也可以是 `storage` 或者 `memory` 的数据位置。
+
+```
+// 固定长度数组：一个固定长度为 k 的数组，其成员的类型为 T，记作 T[k]。写法如下：
+uint[k]
+uint[][k]
+
+// 动态长度数组：记作 T[]
+uint[]
+byte[]
+
+// 特殊数组
+bytes
+string
+
+// 分配内存
+uint[] memory a = new uint[](7);
+bytes memory b = new bytes(2);
+
+// 数组字面量
+[1, 2, 3]
+
+// 类型转换。 [1, 2, 3] 的类型是 uint8[3] memory
+uint[3] memory a = [uint(1), 2, 3]
+
+// 固定长度 memory 的数组，不能转换为动态长度 memory 的数组。(未来可能会取消该限制)
+// 以下示例会报类型错误。
+uint[] memory x = [uint(1), 3, 4];
+```
+
+数组成员
+- length: 数组元素的数量。
+- push: 动态长度的 `storage` 数组(包括 bytes，不包括 string)拥有 push 方法，可以在数组的末尾增加一个元素。
+
+
 
 #### 结构体
 
 
-#### 映射 
+### 映射 
 
 
 
