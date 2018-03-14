@@ -271,10 +271,22 @@ function contribute(Campaign storage _c) public payable {
 
 ### 映射 
 
+映射(Mappings)：
+
+
+```
+// 声明
+mapping(_KeyType => _ValueType)
+// _KeyType: mapping ×  dynamically sized array ×  contract ×  enum ×  struct × other √
+// _ValueType: any type
+
+// 创建
+
+// 访问成员
 
 
 
-
+```
 
 
 
