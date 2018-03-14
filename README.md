@@ -205,11 +205,11 @@ address x = 0xdCad3a6d3569DF655070DEd06cb7A1b2Ccd1D3AF
 数组(Arrays)：相同类型的元素的集合所组成的数据结构。数组可以是固定的长度或者动态的长度，也可以是 `storage` 或者 `memory` 的数据位置。
 
 ```
-// 固定长度数组：一个固定长度为 k 的数组，其成员的类型为 T，记作 T[k]。写法如下：
+// 声明固定长度数组：一个固定长度为 k 的数组，其成员的类型为 T，记作 T[k]。写法如下：
 uint[k]
 uint[][k]
 
-// 动态长度数组：记作 T[]
+// 声明动态长度数组：记作 T[]
 uint[]
 byte[]
 
@@ -217,9 +217,12 @@ byte[]
 bytes
 string
 
-// 分配内存
+// 创建动态长度数组
 uint[] memory a = new uint[](7);
+// 创建固定长度数组
 bytes memory b = new bytes(2);
+// 访问成员
+a[1]
 
 // 数组字面量
 [1, 2, 3]
@@ -230,6 +233,7 @@ uint[3] memory a = [uint(1), 2, 3]
 // 固定长度 memory 的数组，不能转换为动态长度 memory 的数组。(未来可能会取消该限制)
 // 以下示例会报类型错误。
 uint[] memory x = [uint(1), 3, 4];
+
 ```
 
 数组成员
@@ -239,6 +243,30 @@ uint[] memory x = [uint(1), 3, 4];
 
 
 #### 结构体
+
+结构体(Structs): 结构体是一些元素的集合，且这些元素可以为不同的类型，元素一般用名字访问。
+
+```
+// 声明
+struct Campaign {
+    address beneficiary; // values types
+    uint fundingGoal; // values types
+    mapping (uint => Funder) funders; // mappings
+    // others: arrays √ struct ×
+}
+
+// 创建
+Campaign c = Campaign(0x1, 0);
+// 访问成员
+c.beneficiary
+
+
+// 分配引用
+function contribute(Campaign storage _c) public payable {
+    // 分配引用，而不是重新复制值
+    Campaign storage referenceC = _c;
+}
+```
 
 
 ### 映射 
